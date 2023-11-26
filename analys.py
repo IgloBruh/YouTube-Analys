@@ -1,8 +1,5 @@
-# Установка библиотеки
-# pip install google-api-python-client
-
 from googleapiclient.discovery import build
-import datetime
+
 
 # Указываем ключ API
 api_key = 'AIzaSyB-XiELB6Bercf2dJV24TmzaZlqS4MH84s'
