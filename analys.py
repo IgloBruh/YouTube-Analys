@@ -2,13 +2,13 @@ from googleapiclient.discovery import build
 
 
 # Указываем ключ API
-api_key = 'AIzaSyB-XiELB6Bercf2dJV24TmzaZlqS4MH84s'
+api_key = 'YOUR_API_KEY'
 
 # Создаем YouTube Data API клиент
 youtube = build('youtube', 'v3', developerKey=api_key)
 
 # Получаем статистику канала
-channel_id = input()
+channel_id = input('ID вашего YouTube канала')
 response = youtube.channels().list(
     part='statistics',
     id=channel_id
