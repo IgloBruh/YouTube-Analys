@@ -1,8 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QPushButton, QLineEdit, QWidget, QTextBrowser, QMessageBox, QTextEdit
 from googleapiclient.discovery import build
+import matplotlib.pyplot as plt
+
 
 class YouTubeStatisticsApp(QMainWindow):
+
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -22,14 +25,12 @@ class YouTubeStatisticsApp(QMainWindow):
         widget = QWidget()
         widget.setLayout(vbox)
         self.setCentralWidget(widget)
-
-
     
     def get_statistics(self):
         
         vbox = QVBoxLayout()
         widget = QWidget()
-        channel_id = self.input_field.text() #UCzB2V3zc2E4dy3-nxJoD0Yg
+        channel_id = self.input_field.text()  # UCzB2V3zc2E4dy3-nxJoD0Yg
         
         try:
             # Создаем YouTube Data API клиент
@@ -81,7 +82,25 @@ class YouTubeStatisticsApp(QMainWindow):
 
             average_views = total_views / len(video_response.get('items', []))
             
-            
+            video_ids = []
+            video_views = []
+            for item in video_response.get('items', []):
+                if 'videoId' in item['id']:
+                    video_info = youtube.videos().list(
+                        part='statistics, snippet',
+                        id=item['id']['videoId']
+                    ).execute()
+                    video_ids.append(video_info['items'][0]['snippet']['title'])
+                    if video_info.get('items'):
+                        views = video_info['items'][0]['statistics']['viewCount']
+                        video_views.append(views)
+
+            # Create a bar graph
+            plt.title('Views of the Last 10 Videos')
+            plt.xlabel('Video ID')
+            plt.ylabel('Views')
+            plt.plot(video_ids, video_views, marker='o', markersize=7)
+            plt.show()
             
             # Выводим результаты
             vbox.addWidget(QLabel(f'Количество подписок: {sub_count}'))
@@ -109,9 +128,10 @@ class YouTubeStatisticsApp(QMainWindow):
             
             return 1
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = YouTubeStatisticsApp()
-    ex.resize(350, 250)
+    ex.resize(500, 500)
     ex.show()
     sys.exit(app.exec_())
