@@ -29,7 +29,7 @@ class YouTubeStatisticsApp(QMainWindow):
         
         vbox = QVBoxLayout()
         widget = QWidget()
-        channel_id = self.input_field.text()
+        channel_id = self.input_field.text() #UCzB2V3zc2E4dy3-nxJoD0Yg
         
         try:
             # Создаем YouTube Data API клиент
@@ -96,11 +96,17 @@ class YouTubeStatisticsApp(QMainWindow):
             return 0
         except:
             vbox.addWidget(QLabel(f'Неверный ID канала youtube'))
-            vbox.addWidget(self.label)
+            
             self.input_field = QLineEdit()
             self.button = QPushButton('Получить статистику')
+            self.button.clicked.connect(self.get_statistics)
+            
+            vbox.addWidget(self.input_field)
+            vbox.addWidget(self.button)
+            
             widget.setLayout(vbox)
             self.setCentralWidget(widget)
+            
             return 1
 
 if __name__ == '__main__':
